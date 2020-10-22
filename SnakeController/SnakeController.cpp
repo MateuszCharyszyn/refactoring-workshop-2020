@@ -17,6 +17,7 @@ UnexpectedEventException::UnexpectedEventException()
 {}
 
 Controller::Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePort, std::string const& p_config)
+
     : m_displayPort(p_displayPort),
       m_foodPort(p_foodPort),
       m_scorePort(p_scorePort)
@@ -62,21 +63,35 @@ Controller::Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePo
         throw ConfigurationError();
     }
 }
-
+DisplayInd Controller::setHead(){
+    DisplayInd clearOldFood;
+    clearOldFood.x = m_foodPosition.first;
+    clearOldFood.y = m_foodPosition.second;
+    clearOldFood.value = Cell_FREE;
+    return clearOldFood;
+    
+}/*
+DisplayInd Controller::setNewFood(){
+    DisplayInd placeNewFood;
+    placeNewFood.x = receivedFood.x;
+    placeNewFood.y = receivedFood.y;
+    placeNewFood.value = Cell_FOOD;
+    return placeNewFood;
+}
+*/
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try {
         auto const& timerEvent = *dynamic_cast<EventT<TimeoutInd> const&>(*e);
 
         Segment const& currentHead = m_segments.front();
+        bool lost = false;
 
         Segment newHead;
         newHead.x = currentHead.x + ((m_currentDirection & 0b01) ? (m_currentDirection & 0b10) ? 1 : -1 : 0);
         newHead.y = currentHead.y + (not (m_currentDirection & 0b01) ? (m_currentDirection & 0b10) ? 1 : -1 : 0);
         newHead.ttl = currentHead.ttl;
-
-        bool lost = false;
-
+        
         for (auto segment : m_segments) {
             if (segment.x == newHead.x and segment.y == newHead.y) {
                 m_scorePort.send(std::make_unique<EventT<LooseInd>>());
@@ -146,11 +161,7 @@ void Controller::receive(std::unique_ptr<Event> e)
                 if (requestedFoodCollidedWithSnake) {
                     m_foodPort.send(std::make_unique<EventT<FoodReq>>());
                 } else {
-                    DisplayInd clearOldFood;
-                    clearOldFood.x = m_foodPosition.first;
-                    clearOldFood.y = m_foodPosition.second;
-                    clearOldFood.value = Cell_FREE;
-                    m_displayPort.send(std::make_unique<EventT<DisplayInd>>(clearOldFood));
+                    m_displayPort.send(std::make_unique<EventT<DisplayInd>>(setHead()));
 
                     DisplayInd placeNewFood;
                     placeNewFood.x = receivedFood.x;
