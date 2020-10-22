@@ -1,7 +1,6 @@
 set(TARGET_NAME SnakeController)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-//cos xD
 set(SNAKE_SOURCES
     SnakeController.cpp
 )
