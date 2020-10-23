@@ -217,7 +217,8 @@ void Controller::receive(std::unique_ptr<Event> e)
 {
 
     if(e != NULL && TimeoutInd::MESSAGE_ID == e->getMessageId()){
-        TimeoutInd time;       
+        TimeoutInd time;
+        //EventT<TimeoutInd> &cos = ((EventT<TimeoutInd>)*e);       
         handleTimePassed(time);
     }
     if(e != NULL && DirectionInd::MESSAGE_ID == e->getMessageId()){
@@ -228,7 +229,7 @@ void Controller::receive(std::unique_ptr<Event> e)
         FoodInd foodInd;
         handleFoodPositionChange(foodInd);
     }
-    if(e != NULL && TimeoutInd::MESSAGE_ID == e->getMessageId()){
+    if(e != NULL && FoodResp::MESSAGE_ID == e->getMessageId()){
         FoodResp foodResp;
         handleNewFood(foodResp);
     }
