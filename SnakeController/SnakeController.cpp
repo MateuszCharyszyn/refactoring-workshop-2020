@@ -1,4 +1,5 @@
 #include "SnakeController.hpp"
+#include <segments.cpp>
 
 #include <algorithm>
 #include <sstream>
@@ -119,7 +120,7 @@ bool perpendicular(Direction dir1, Direction dir2)
 }
 } // namespace
 
-Controller::Segment Controller::calculateNewHead() const
+Segment Controller::calculateNewHead() const
 {
     Segment const& currentHead = m_segments.front();
 

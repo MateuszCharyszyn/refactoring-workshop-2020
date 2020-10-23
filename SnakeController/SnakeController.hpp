@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include <functional>
+#include <segments.cpp>
 
 #include "IEventHandler.hpp"
 #include "SnakeInterface.hpp"
@@ -39,13 +40,13 @@ private:
 
     std::pair<int, int> m_mapDimension;
     std::pair<int, int> m_foodPosition;
-
+/*
     struct Segment
     {
         int x;
         int y;
     };
-
+*/
     std::list<Segment> m_segments;
     Direction m_currentDirection;
 
@@ -72,3 +73,10 @@ private:
 };
 
 } // namespace Snake
+/*
+class remove{
+
+    void removeTailSegmentIfNotScored(Segment const& newHead);
+    void removeTailSegment();
+}
+*/
